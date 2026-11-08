@@ -1,0 +1,10 @@
+{
+  "name": "hot-n-spizee-ordering-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "start": "node scripts/preview.cjs",
+    "test": "node --test"
+  }
+}

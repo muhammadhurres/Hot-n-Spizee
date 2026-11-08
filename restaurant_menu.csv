@@ -1,0 +1,57 @@
+Item Name,Category,Price,Image URL,Description,Status
+Crispy Zinger Burger,Burger,390,https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500,Crispy fried chicken fillet with lettuce and mayo.,Available
+Bar B.Q Malai Burger,Burger,400,https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500,Grilled burger with creamy barbecue malai sauce.,Available
+Zinger with Cheese Burger,Burger,450,https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500,Crispy zinger burger topped with melted cheese.,Available
+Beef Burger,Burger,400,https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500,Juicy beef patty with classic toppings.,Available
+Fried Chicken Psc with Fries,Fried Chicken,599,https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=500,Crispy fried chicken pieces served with hot fries.,Available
+Plain Naan,Tandoor,30,https://images.unsplash.com/photo-1601050690597-df056fb4ce78?q=80&w=500,Freshly baked traditional tandoori flatbread.,Available
+Roti,Tandoor,30,https://images.unsplash.com/photo-1601050690597-df056fb4ce78?q=80&w=500,Standard whole wheat flatbread.,Available
+Paratha,Tandoor,70,https://images.unsplash.com/photo-1601050690597-df056fb4ce78?q=80&w=500,"Flaky, layered fried flatbread.",Available
+Chicken Chowmein,Chinese,550,https://images.unsplash.com/photo-1525755662778-989d0524087e?q=80&w=500,Stir-fried noodles with chicken and vegetables.,Available
+Vegetable Chowmein,Chinese,400,https://images.unsplash.com/photo-1525755662778-989d0524087e?q=80&w=500,Stir-fried noodles loaded with fresh veggies.,Available
+Chicken Manchurian with Rice,Chinese,800,https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=500,Saucy chicken manchurian served alongside rice.,Available
+Chicken Fried Rice,Chinese,450,https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=500,Wok-fried rice with chicken bits and greens.,Available
+Egg Fried Rice,Chinese,350,https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=500,Classic fried rice tossed with scrambled egg.,Available
+Vegetable Fried Rice,Chinese,350,https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=500,Healthy wok-tossed rice with seasoned vegetables.,Available
+Chicken Makhni Karahi (Half),Chicken Karahi,1000,https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=500,Creamy buttery chicken wok-cooked karahi.,Available
+Chicken Makhni Karahi (Full),Chicken Karahi,1800,https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=500,Creamy buttery chicken wok-cooked karahi.,Available
+Chicken White Karahi (Half),Chicken Karahi,1200,https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=500,Chicken cooked in a mild white yogurt and cream base.,Available
+Chicken White Karahi (Full),Chicken Karahi,2100,https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=500,Chicken cooked in a mild white yogurt and cream base.,Available
+Chicken Cheese Handi,Royal Handi,1500,https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=500,Traditional clay-pot chicken curry topped with cheese.,Available
+Chicken Handi,Royal Handi,1200,https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=500,Classic rich chicken gravy prepared in a clay handi.,Available
+Chicken Makhni Handi,Royal Handi,1300,https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=500,Velvety butter chicken gravy cooked handi-style.,Available
+Chicken White Handi,Royal Handi,1350,https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=500,"Smooth, white-sauced chicken handi.",Available
+Daal Makhni Handi,Royal Handi,900,https://images.unsplash.com/photo-1546833999-b9f581a1996d?q=80&w=500,"Buttery, slowly cooked creamy black lentils.",Available
+Matka Chicken Nawabi Biryani,Rice & Biryani,1400,https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?q=80&w=500,Royal spiced chicken biryani served in an earthen pot.,Available
+Matka Chicken Chilman Biryani,Rice & Biryani,1300,https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?q=80&w=500,Aromatically sealed slow-cooked pot biryani.,Available
+Matka Chicken Sindhi Biryani,Rice & Biryani,1200,https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?q=80&w=500,"Spicy, tangy Sindhi-flavored biryani in a matka.",Available
+Chicken Tikka Biryani (2 Person),Rice & Biryani,700,https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?q=80&w=500,Biryani layered with smoky grilled chicken tikka pieces.,Available
+White Rice,Rice & Biryani,300,https://images.unsplash.com/photo-1516685018646-549198525c1b?q=80&w=500,Simple steamed fluffy white rice.,Available
+Single Fries,Fries,200,https://images.unsplash.com/photo-1573080496219-bb080dd4f877?q=80&w=500,Classic golden potato french fries.,Available
+Loaded Fries,Fries,450,https://images.unsplash.com/photo-1573080496219-bb080dd4f877?q=80&w=500,Fries topped heavily with cheese and sauces.,Available
+Mayo Fries,Fries,350,https://images.unsplash.com/photo-1573080496219-bb080dd4f877?q=80&w=500,Crispy fries drizzled with creamy mayonnaise.,Available
+Masala Fries,Fries,250,https://images.unsplash.com/photo-1573080496219-bb080dd4f877?q=80&w=500,Fries tossed in spicy local masala seasoning.,Available
+Regular Plater 2 Person,Bar B.Q,1399,https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=500,Assorted BBQ item platter for two.,Available
+Regular Plater 4 Person,Bar B.Q,2900,https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=500,Mega assorted BBQ item platter for four.,Available
+Chicken Boti with Bone,Bar B.Q,600,https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=500,Traditional grilled bone-in chicken tikka bites.,Available
+Chicken Malai Boti Boneless,Bar B.Q,500,https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=500,"Creamy, melting boneless grilled chicken skewers.",Available
+Chicken Boti Boneless,Bar B.Q,500,https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=500,Classic spiced grilled boneless chicken cuboids.,Available
+Chicken Reshmi Kabab (4 Pieces),Bar B.Q,600,https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=500,"Silky, minced chicken kababs grilled over coals.",Available
+Chicken Reshmi Kabab (12 Pieces),Bar B.Q,1600,https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=500,Large family pack of chicken reshmi kababs.,Available
+Beef Seekh Kabab 4 Pieces,Bar B.Q,600,https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=500,Traditional spiced minced beef skewers.,Available
+Chicken Tikka Chest,Bar B.Q,400,https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=500,Quarter chicken chest piece barbecue.,Available
+Chicken Tikka Leg,Bar B.Q,350,https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=500,Quarter chicken leg piece barbecue.,Available
+Malai Tikka,Bar B.Q,500,https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=500,Super creamy and tender grilled chicken quarter.,Available
+Chicken Cheese Kabab (4 P),Bar B.Q,800,https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=500,Minced chicken kababs filled with cheesy cores.,Available
+Shangrila Boti Plate,Bar B.Q,800,https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=500,House-special recipe marinated grilled botis.,Available
+Hot & Sour Soup with Chicken (1 Person),Starters,350,https://images.unsplash.com/photo-1547592165-e1d17fed6005?q=80&w=500,Tangy and spicy thick Asian soup with chicken shreds.,Available
+Hot & Sour Soup with Chicken (Family),Starters,999,https://images.unsplash.com/photo-1547592165-e1d17fed6005?q=80&w=500,Tangy and spicy thick Asian soup with chicken shreds.,Available
+Chicken Corn Soup (1 Person),Starters,300,https://images.unsplash.com/photo-1547592165-e1d17fed6005?q=80&w=500,Comforting sweet corn broth with egg drops and chicken.,Available
+Chicken Corn Soup (Family),Starters,900,https://images.unsplash.com/photo-1547592165-e1d17fed6005?q=80&w=500,Comforting sweet corn broth with egg drops and chicken.,Available
+Thai Soup (1 Person),Starters,300,https://images.unsplash.com/photo-1547592165-e1d17fed6005?q=80&w=500,Clear herbal spicy Thai broth with subtle ginger notes.,Available
+Thai Soup (Family),Starters,900,https://images.unsplash.com/photo-1547592165-e1d17fed6005?q=80&w=500,Clear herbal spicy Thai broth with subtle ginger notes.,Available
+Cold Drink 1.5Lt,Drinks,220,https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=500,Large sharing carbonated soda bottle.,Available
+Cold Drink 500ml,Drinks,120,https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=500,Single serving soft drink bottle.,Available
+Cold Drink Can,Drinks,120,https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=500,Standard aluminum carbonated beverage can.,Available
+Mineral Water (S),Drinks,70,https://images.unsplash.com/photo-1608885898957-a599fb1b4641?q=80&w=500,Small clean bottled mineral drinking water.,Available
+Mineral Water (L),Drinks,120,https://images.unsplash.com/photo-1608885898957-a599fb1b4641?q=80&w=500,Large clean bottled mineral drinking water.,Available
