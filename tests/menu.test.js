@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { cartSubtotal, readCart, saveCart } from "../public/js/cart.js";
+import { homeFaqs } from "../public/js/faq.js";
 import { escapeHtml, filterMenu, formatPrice, loadMenu } from "../public/js/menu.js";
 import { openWhatsApp } from "../public/js/whatsapp.js";
 
@@ -83,6 +84,15 @@ test("escapes menu text and formats PKR", () => {
   assert.equal(escapeHtml(`<dish "special">`), "&lt;dish &quot;special&quot;&gt;");
   assert.match(formatPrice(390), /390/);
   assert.match(formatPrice(390), /PKR/);
+});
+
+test("homepage FAQ answers stay within the requested word range", () => {
+  assert.equal(homeFaqs.length, 4);
+  for (const { question, answer } of homeFaqs) {
+    assert.ok(question.trim());
+    const wordCount = answer.trim().split(/\s+/).length;
+    assert.ok(wordCount >= 40 && wordCount <= 60, `${question}: ${wordCount} words`);
+  }
 });
 
 test("restores only cart entries that refer to current menu items", () => {

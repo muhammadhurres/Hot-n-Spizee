@@ -1,11 +1,12 @@
 import { cartSubtotal, readCart, saveCart } from "./cart.js";
+import { homeFaqs } from "./faq.js";
 import { escapeHtml, filterMenu, formatPrice, loadMenu } from "./menu.js";
 import { openWhatsApp } from "./whatsapp.js";
 
 const app = document.querySelector("#main-content");
 const cartCount = document.querySelector("#cart-count");
 const statusMessage = document.querySelector("#status-message");
-const checkout = { name: "", phone: "", fulfillment: "delivery", address: "", payment: "Cash on delivery", locationUrl: "" };
+const checkout = { name: "", phone: "", fulfillment: "delivery", address: "", addressConfirmed: false, locationAddress: "", locationAccuracy: null, payment: "Cash on delivery", locationUrl: "" };
 let menu = [];
 let cart = [];
 let searchValue = "";
@@ -126,6 +127,10 @@ function renderHome() {
     <div class="section-heading"><h2>Popular picks</h2></div>
     <div class="menu-grid">${featured.map(dishCard).join("")}</div>
     <section class="notice notice-spaced"><strong>Ordering note</strong><br>Your WhatsApp message is an order request. Our team confirms availability and the delivery fee with you before accepting it.</section>
+    <section class="notice notice-spaced" aria-labelledby="faq-title">
+      <h2 id="faq-title">Frequently asked questions</h2>
+      ${homeFaqs.map(({ question, answer }) => `<h3>${escapeHtml(question)}</h3><p>${escapeHtml(answer)}</p>`).join("")}
+    </section>
   </div>`;
   document.querySelector("#home-menu-search").addEventListener("submit", (event) => {
     event.preventDefault();
@@ -223,16 +228,19 @@ function checkoutFields() {
       <div class="field"><label for="customer-name">Your name *</label><input id="customer-name" name="name" required maxlength="80" autocomplete="name" value="${escapeHtml(checkout.name)}"></div>
       <div class="field"><label for="customer-phone">Your phone/WhatsApp number *</label><input id="customer-phone" name="phone" required maxlength="25" autocomplete="tel" inputmode="tel" value="${escapeHtml(checkout.phone)}"></div>
       <div class="field field-full"><span class="field-label">How would you like your order?</span><div class="radio-list">
-        <label class="radio-option"><input type="radio" name="fulfillment" value="delivery"${checkout.fulfillment === "delivery" ? " checked" : ""}><span><strong>Delivery</strong><small>Staff confirms delivery availability and fee in WhatsApp.</small></span></label>
-        <label class="radio-option"><input type="radio" name="fulfillment" value="pickup"${checkout.fulfillment === "pickup" ? " checked" : ""}><span><strong>Pickup</strong><small>Collect from the restaurant after staff confirms your request.</small></span></label>
+        <label class="radio-option"><input type="radio" name="fulfillment" value="delivery"${checkout.fulfillment === "delivery" ? " checked" : ""}><span><strong>Delivery</strong><small>Fee confirmed in WhatsApp.</small></span></label>
+        <label class="radio-option"><input type="radio" name="fulfillment" value="pickup"${checkout.fulfillment === "pickup" ? " checked" : ""}><span><strong>Pickup</strong><small>Collect after confirmation.</small></span></label>
       </div></div>
-      ${checkout.fulfillment === "delivery" ? `<div class="field field-full"><label for="delivery-address">Delivery address *</label><textarea id="delivery-address" name="address" required maxlength="500" autocomplete="street-address" placeholder="House/building, street, area, and a nearby landmark">${escapeHtml(checkout.address)}</textarea><span class="field-hint">You can also share your current location with permission; add a typed address or landmark if possible.</span><button class="button button-secondary button-small location-button" id="location-button" type="button">Use my current location</button>${checkout.locationUrl ? `<span class="field-hint">A map link will be included in your WhatsApp message.</span>` : ""}</div>` : ""}
+      ${checkout.fulfillment === "delivery" ? `<div class="field field-full"><label for="delivery-address">Delivery address *</label><textarea id="delivery-address" name="address" required maxlength="500" autocomplete="street-address" placeholder="House/building, street, area, and a nearby landmark">${escapeHtml(checkout.address)}</textarea>${checkout.locationAddress ? `<span class="field-hint">Nearby mapped address (verify it): ${escapeHtml(checkout.locationAddress)}. Add your exact house/building and landmark.</span>` : ""}<span class="field-hint">With your permission, your coordinates are sent to OpenStreetMap to look up your address. Please add a house number or landmark if needed. <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>.</span><button class="button button-secondary button-small location-button" id="location-button" type="button">Use my current location</button>${checkout.locationUrl ? `<span class="field-hint">GPS accuracy: about ±${Math.round(checkout.locationAccuracy)} m. The map pin will be included in your WhatsApp message.</span>` : ""}<label class="address-confirmation"><input id="address-confirmation" type="checkbox"${checkout.addressConfirmed ? " checked" : ""} required><span>I checked this delivery address and added my exact house/building and landmark. *</span></label></div>` : ""}
       <div class="field field-full"><label for="payment-method">Preferred payment method *</label><select id="payment-method" name="payment">
         ${paymentOptions.map((method) => `<option${checkout.payment === method ? " selected" : ""}>${method}</option>`).join("")}
       </select><span class="field-hint">No payment is taken on this website. Staff confirms your order and sends payment details for advance payment.</span></div>
     </div>
     <div class="summary-row"><span>Food subtotal</span><strong>${formatPrice(cartSubtotal(cart, menu))}</strong></div>
-    <p class="fine-print">${checkout.fulfillment === "delivery" ? "Delivery fee is not included; staff will confirm it in WhatsApp. " : ""}Sending your request does not confirm the order. Staff checks availability first. Prepaid orders are generally final after confirmation, with staff-reviewed exceptions for unavailable food or an extreme delay.</p>
+    <div class="checkout-note">
+      <button class="info-button" id="order-note-toggle" type="button" aria-expanded="false" aria-controls="order-note" aria-label="Show order information"><span aria-hidden="true">i</span></button>
+      <p class="fine-print" id="order-note" hidden>${checkout.fulfillment === "delivery" ? "Delivery fee is not included; staff will confirm it in WhatsApp. " : ""}Sending your request does not confirm the order. Staff checks availability first. Prepaid orders are generally final after confirmation, with staff-reviewed exceptions for unavailable food or an extreme delay.</p>
+    </div>
     <button class="button" type="submit">Continue to WhatsApp</button>
   </form>`;
 }
@@ -264,11 +272,26 @@ function renderCart() {
     </div>
   </div>`;
   document.querySelector("#checkout-form").addEventListener("input", (event) => {
-    if (event.target.name) checkout[event.target.name] = event.target.value;
+    if (event.target.name) {
+      checkout[event.target.name] = event.target.value;
+      if (event.target.name === "address") {
+        checkout.addressConfirmed = false;
+        document.querySelector("#address-confirmation").checked = false;
+      }
+    }
   });
   document.querySelector("#checkout-form").addEventListener("change", (event) => {
     if (event.target.name) checkout[event.target.name] = event.target.value;
+    if (event.target.id === "address-confirmation") checkout.addressConfirmed = event.target.checked;
     if (event.target.name === "fulfillment") renderCart();
+  });
+  document.querySelector("#order-note-toggle").addEventListener("click", (event) => {
+    const button = event.currentTarget;
+    const note = document.querySelector("#order-note");
+    const expanded = button.getAttribute("aria-expanded") !== "true";
+    button.setAttribute("aria-expanded", String(expanded));
+    button.setAttribute("aria-label", expanded ? "Hide order information" : "Show order information");
+    note.hidden = !expanded;
   });
   document.querySelector("#checkout-form").addEventListener("submit", (event) => {
     event.preventDefault();
@@ -277,8 +300,12 @@ function renderCart() {
       const item = bySlug.get(entry.slug);
       return `• ${item.name} × ${entry.quantity} — ${formatPrice(item.price * entry.quantity)}${entry.note ? `\n  Note: ${entry.note}` : ""}`;
     });
-    const locationLine = checkout.locationUrl ? `\nMap: ${checkout.locationUrl}` : "";
-    const addressLine = checkout.fulfillment === "delivery" ? `\nDelivery address: ${checkout.address.trim()}${locationLine}` : "";
+    const locationLine = checkout.locationUrl
+      ? `\nGPS accuracy: about ±${Math.round(checkout.locationAccuracy)} m\nMap: ${checkout.locationUrl}` : "";
+    const mappedAddressLine = checkout.locationAddress && checkout.locationAddress !== checkout.address.trim()
+      ? `\nNearby mapped address (GPS suggestion; verify): ${checkout.locationAddress}` : "";
+    const addressLine = checkout.fulfillment === "delivery"
+      ? `\nDelivery address: ${checkout.address.trim()}${mappedAddressLine}${locationLine}` : "";
     const message = [
       "ORDER REQUEST — Hot n Spizee",
       `Name: ${checkout.name.trim()}`,
@@ -386,18 +413,67 @@ app.addEventListener("click", (event) => {
     if (!navigator.geolocation) return notify("Location sharing is not available in this browser. Type your delivery address instead.");
     const button = event.target.closest("#location-button");
     button.disabled = true;
-    button.textContent = "Getting location…";
-    navigator.geolocation.getCurrentPosition((position) => {
-      checkout.locationUrl = `https://maps.google.com/?q=${position.coords.latitude},${position.coords.longitude}`;
-      renderCart();
-      notify("Location link added. Check your address before continuing.");
+    button.textContent = "Getting your location…";
+    if (checkout.address === checkout.locationAddress) checkout.address = "";
+    checkout.locationAddress = "";
+    checkout.locationAccuracy = null;
+    checkout.locationUrl = "";
+    checkout.addressConfirmed = false;
+    document.querySelector("#address-confirmation").checked = false;
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const { latitude, longitude, accuracy } = position.coords;
+      if (!Number.isFinite(accuracy) || accuracy > 20) {
+        renderCart();
+        const reportedAccuracy = Number.isFinite(accuracy) ? `±${Math.round(accuracy)} m` : "unknown";
+        notify(`Your phone reported location accuracy of ${reportedAccuracy}. We need 20 m or better; move to an open area and try again, or type your address.`);
+        return;
+      }
+      checkout.locationUrl = `https://maps.google.com/?q=${latitude},${longitude}`;
+      checkout.locationAccuracy = accuracy;
+      button.textContent = "Looking up address…";
+      try {
+        const lookupUrl = new URL("https://nominatim.openstreetmap.org/reverse");
+        lookupUrl.search = new URLSearchParams({
+          format: "jsonv2",
+          lat: String(latitude),
+          lon: String(longitude),
+          zoom: "18",
+          addressdetails: "1",
+        }).toString();
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        let response;
+        try {
+          response = await fetch(lookupUrl, {
+            headers: { "Accept-Language": navigator.language },
+            signal: controller.signal,
+          });
+        } finally {
+          clearTimeout(timeoutId);
+        }
+        if (!response.ok) throw new Error(`Address lookup returned HTTP ${response.status}.`);
+        const result = await response.json();
+        if (typeof result.display_name !== "string" || !result.display_name.trim()) {
+          throw new Error("Address lookup returned no readable address.");
+        }
+        if (result.display_name.trim().length > 500) {
+          throw new Error("Address lookup returned an address that is too long for the delivery field.");
+        }
+        checkout.locationAddress = result.display_name.trim();
+        checkout.address = result.display_name.trim();
+        renderCart();
+        notify(`Nearby address suggestion found (GPS accuracy ±${Math.round(accuracy)} m). Verify it and add your exact house/building and landmark before continuing.`);
+      } catch (error) {
+        console.error("Could not look up a readable address from the current location.", error);
+        renderCart();
+        notify("Your map pin was saved, but address lookup failed. Please type your address; the pin will still be sent.");
+      }
     }, (error) => {
-      button.disabled = false;
-      button.textContent = "Use my current location";
+      renderCart();
       if (error.code === error.PERMISSION_DENIED) notify("Location permission was denied. You can type your address instead.");
       else if (error.code === error.TIMEOUT) notify("Location took too long to find. Please type your address instead.");
       else notify("Could not get your location. Please type your address instead.");
-    }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 });
+    }, { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 });
   }
 });
 

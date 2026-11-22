@@ -239,20 +239,27 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(25px, 3.5v
 .cart-line h3 { margin: 0 0 5px; font-family: Georgia, serif; font-size: 18px; }
 .cart-line p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
 .cart-line-controls { display: flex; align-items: center; gap: 8px; }
+.cart-line-controls .field { width: auto; flex: 0 0 auto; }
 .quantity-input { width: 66px; min-height: 38px; padding: 7px; border: 1px solid var(--line); border-radius: 8px; }
+.cart-line-controls .quantity-input { width: 66px; }
 .remove-button { border: 0; background: none; color: var(--red-dark); cursor: pointer; font-size: 12px; font-weight: 750; }
 .cart-note { margin-top: 10px; }
 .cart-note textarea { min-height: 66px; }
 .summary-row { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; color: var(--muted); font-size: 14px; }
 .summary-row.total { margin-top: 4px; padding-top: 15px; border-top: 1px solid var(--line); color: var(--ink); font-size: 17px; font-weight: 850; }
-.fine-print { margin: 12px 0 18px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.fine-print { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.checkout-note { margin: 12px 0 18px; }
+.info-button { display: grid; width: 30px; height: 30px; place-items: center; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--red-dark); cursor: pointer; font-size: 15px; font-weight: 800; }
 .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .field-full { grid-column: 1 / -1; }
-.radio-list { display: grid; gap: 9px; }
-.radio-option { display: flex; align-items: flex-start; gap: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); cursor: pointer; }
-.radio-option input { margin-top: 3px; accent-color: var(--red); }
-.radio-option span { display: grid; gap: 3px; }
-.radio-option small { color: var(--muted); font-size: 12px; }
+.radio-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.field .radio-option { display: flex; min-width: 0; align-items: flex-start; gap: 8px; margin-bottom: 0; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font-size: 13px; font-weight: 400; line-height: 1.35; text-align: left; cursor: pointer; }
+.radio-option input { flex: 0 0 auto; width: auto; min-height: 0; margin: 2px 0 0; padding: 0; border: 0; accent-color: var(--red); }
+.radio-option span { display: grid; min-width: 0; gap: 3px; text-align: left; }
+.radio-option strong { line-height: 1.35; }
+.radio-option small { color: var(--muted); font-size: 11px; line-height: 1.35; }
+.field .address-confirmation { display: flex; align-items: flex-start; gap: 8px; margin: 12px 0 0; color: var(--ink); font-size: 12px; font-weight: 600; line-height: 1.5; }
+.address-confirmation input { flex: 0 0 auto; width: auto; min-height: 0; margin: 3px 0 0; padding: 0; }
 .reservation-layout { display: grid; grid-template-columns: minmax(0, .8fr) minmax(320px, 1.2fr); gap: 36px; align-items: start; }
 .reservation-aside { padding: 26px; border: 1px solid var(--glass-border); border-radius: 18px; background: var(--glass); box-shadow: 0 8px 24px rgb(34 31 25 / 5%); -webkit-backdrop-filter: blur(18px) saturate(135%); backdrop-filter: blur(18px) saturate(135%); }
 .reservation-aside h2 { font-size: 28px; }
@@ -298,6 +305,8 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(25px, 3.5v
   .dish-card-bottom .button { width: 100%; }
   .detail-layout, .reservation-layout { grid-template-columns: 1fr; gap: 20px; }
   .detail-image { aspect-ratio: 1.35; }
+  .cart-line { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .cart-line-controls { justify-content: flex-start; }
   .form-grid { grid-template-columns: 1fr; }
   .field-full { grid-column: auto; }
   .site-footer { flex-direction: column; padding: 22px 18px; }
@@ -310,6 +319,9 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(25px, 3.5v
   .menu-grid { grid-template-columns: 1fr; }
   .dish-description { display: block; }
   h1 { font-size: 32px; }
+}
+@media (max-width: 320px) {
+  body { min-width: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition-duration: .01ms !important; }

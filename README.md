@@ -14,7 +14,7 @@ The interface uses lightweight glass-inspired surfaces and short entrance/press 
 
 ## Cloudflare Pages
 
-Build the static site with `npm run build`; the deployable output is `dist/`. In Cloudflare Pages, use `/` as the root directory, `npm run build` as the build command, and `dist` as the build output directory. The purchased domain's canonical origin is `https://hotnspizee.com`; set the `SITE_URL` build environment variable to that exact value. Cloudflare builds fail if this is missing, to avoid publishing incorrect canonical URLs. The build generates pre-rendered homepage, menu, and individual dish pages, `robots.txt`, and `sitemap.xml` from the current public menu spreadsheet.
+Build the static site with `npm run build`; the deployable output is `dist/`. In Cloudflare Pages, use `/` as the root directory, `npm run build` as the build command, and `dist` as the build output directory. The purchased domain's canonical origin is `https://hotnspizee.com`; set the `SITE_URL` build environment variable to that exact value. Cloudflare builds fail if this is missing, to avoid publishing incorrect canonical URLs. The build generates pre-rendered homepage, menu, and individual dish pages, `robots.txt`, `sitemap.xml`, and a menu-synced `llms.txt` from the current public menu spreadsheet. The homepage includes the restaurant, website, and visible FAQ structured data; dish pages include menu-item and offer structured data.
 
 Cloudflare Pages preview environments also need `SITE_URL` set to their intended canonical production origin. Rebuild and deploy after changing the menu so the pre-rendered pages and sitemap reflect the latest spreadsheet; the interactive menu continues to load its live CSV data.
 
@@ -30,3 +30,14 @@ Cloudflare Pages preview environments also need `SITE_URL` set to their intended
 ## Firebase Hosting
 
 The existing `firebase.json` is for Firebase Hosting only. Cloudflare Pages uses the build and output settings above instead.
+
+## Android app
+
+Capacitor packages the existing static site; it does not change the website UI or local cart behavior. The web build is `dist/`, configured as Capacitor's `webDir`.
+
+For the first Android setup, build the site and add the native platform:
+
+1. Run `npm run build`.
+2. Run `npx cap add android`.
+
+After changing the website, run `npm run android:sync` to rebuild `dist/` and sync it into the Android project. Open the project in Android Studio with `npx cap open android`.

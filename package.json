@@ -5,6 +5,17 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "start": "node scripts/preview.cjs",
-    "test": "node --test"
+    "test": "node --test",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev",
+    "android:sync": "npm run build && cap sync android"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.6.2",
+    "wrangler": "^4.159.0"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.6.2",
+    "@capacitor/core": "^8.6.2"
   }
 }

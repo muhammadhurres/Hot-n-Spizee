@@ -1,6 +1,7 @@
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { homeFaqs } from "../public/js/faq.js";
 import { escapeHtml, formatPrice, loadMenu } from "../public/js/menu.js";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -20,6 +21,7 @@ if (configuredSiteUrl) {
   }
   siteUrl = parsed.origin;
 }
+const canonicalOrigin = siteUrl || "https://hotnspizee.com";
 
 const menu = await loadMenu();
 const template = await readFile(path.join(sourceRoot, "index.html"), "utf8");
@@ -56,15 +58,16 @@ function page({ title, description, canonicalPath, main, schema, socialImage = "
   if (siteUrl) {
     const canonicalUrl = new URL(canonicalPath, siteUrl).href;
     const socialImageUrl = new URL(socialImage, siteUrl).href;
-    html = html.replace("</head>", [
-      `<meta name="site-url" content="${siteUrl}">`,
-      `<link rel="canonical" href="${canonicalUrl}">`,
-      `<meta property="og:url" content="${canonicalUrl}">`,
-      `<meta property="og:image" content="${socialImageUrl}">`,
-      `<meta name="twitter:image" content="${socialImageUrl}">`,
-      `<script type="application/ld+json">${jsonLd(schema)}</script>`,
-      "</head>",
-    ].join("\n    "));
+    html = html
+      .replace(/(<meta property="og:image" content=")[^"]*(")/, `$1${socialImageUrl}$2`)
+      .replace(/(<meta name="twitter:image" content=")[^"]*(")/, `$1${socialImageUrl}$2`)
+      .replace("</head>", [
+        `<meta name="site-url" content="${siteUrl}">`,
+        `<link rel="canonical" href="${canonicalUrl}">`,
+        `<meta property="og:url" content="${canonicalUrl}">`,
+        `<script type="application/ld+json">${jsonLd(schema)}</script>`,
+        "</head>",
+      ].join("\n    "));
   } else {
     html = html.replace("</head>", `<script type="application/ld+json">${jsonLd(schema)}</script>\n  </head>`);
   }
@@ -78,15 +81,38 @@ const address = {
   postalCode: "45600",
   addressCountry: "PK",
 };
+const restaurantId = `${canonicalOrigin}/#restaurant`;
 const restaurantSchema = {
   "@context": "https://schema.org",
-  "@type": "Restaurant",
-  name: "Hot n Spizee",
-  telephone: "+923481591949",
-  address,
-  image: siteUrl ? `${siteUrl}/assets/logo-hero.jpeg` : "/assets/logo-hero.jpeg",
-  servesCuisine: ["Pakistani", "South Asian"],
-  ...(siteUrl ? { url: siteUrl, hasMenu: `${siteUrl}/menu/` } : {}),
+  "@graph": [
+    {
+      "@type": ["Restaurant", "Organization"],
+      "@id": restaurantId,
+      name: "Hot n Spizee",
+      url: canonicalOrigin,
+      telephone: "+923481591949",
+      address,
+      image: `${canonicalOrigin}/assets/logo-hero.jpeg`,
+      servesCuisine: ["Pakistani", "South Asian"],
+      hasMenu: `${canonicalOrigin}/menu/`,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${canonicalOrigin}/#website`,
+      url: canonicalOrigin,
+      name: "Hot n Spizee",
+      publisher: { "@id": restaurantId },
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${canonicalOrigin}/#faq`,
+      mainEntity: homeFaqs.map(({ question, answer }) => ({
+        "@type": "Question",
+        name: question,
+        acceptedAnswer: { "@type": "Answer", text: answer },
+      })),
+    },
+  ],
 };
 const homeDescription = "Explore Hot n Spizee's Pakistani menu in Chatta Bakhtawar, Islamabad. View dishes and prices, then send an order request through WhatsApp.";
 const homeMain = `<div class="page-shell">
@@ -103,10 +129,39 @@ const homeMain = `<div class="page-shell">
     <p>Open daily · 1:00 PM–1:00 AM</p><p><a href="tel:+923481591949">+92 348 1591949</a></p>
     <p>Orders are requests sent through WhatsApp. The restaurant confirms availability and delivery fees before accepting an order.</p>
   </section>
+  <section class="notice notice-spaced" aria-labelledby="faq-title">
+    <h2 id="faq-title">Frequently asked questions</h2>
+    ${homeFaqs.map(({ question, answer }) => `<h3>${escapeAttribute(question)}</h3><p>${escapeAttribute(answer)}</p>`).join("")}
+  </section>
 </div>`;
 
 await rm(outputRoot, { recursive: true, force: true });
 await cp(sourceRoot, outputRoot, { recursive: true });
+const llmsMenu = menu.map((item) =>
+  `- ${item.name} (${item.category}) - PKR ${item.price}${item.available ? "" : " (currently unavailable)"}`,
+).join("\n");
+await writeFile(path.join(outputRoot, "llms.txt"), [
+  "# Hot n Spizee",
+  "> Pakistani and South Asian restaurant in Chatha Bakhtawar, Islamabad, Pakistan.",
+  "",
+  "## Canonical URLs",
+  `- Home: ${canonicalOrigin}/`,
+  `- Menu: ${canonicalOrigin}/menu/`,
+  "",
+  "## Offerings",
+  `Categories: ${[...new Set(menu.map((item) => item.category))].join(", ")}.`,
+  "",
+  "## Menu and prices",
+  "Prices are listed in PKR. Check the menu for current prices and availability; confirm details with the restaurant before ordering.",
+  llmsMenu,
+  "",
+  "## Location and contact",
+  "Street 1, Line 12, near Cheema Hostel, Park Road, Al Saval Avenue, Chatha Bakhtawar, Islamabad, 45600.",
+  "Open daily, 1:00 PM-1:00 AM.",
+  "Phone/WhatsApp: +92 348 1591949.",
+  "WhatsApp orders are requests; staff confirms availability and any delivery fee before accepting.",
+  "",
+].join("\n"));
 await writeFile(path.join(outputRoot, "index.html"), page({
   title: "Pakistani Restaurant in Islamabad | Hot n Spizee",
   description: homeDescription,
@@ -186,7 +241,16 @@ for (const item of menu) {
 }
 
 const urls = ["/", "/menu/", ...menu.map((item) => `/menu/${encodeURIComponent(item.slug)}/`)];
+const welcomedCrawlers = [
+  "OAI-SearchBot",
+  "ChatGPT-User",
+  "PerplexityBot",
+  "ClaudeBot",
+  "Googlebot",
+  "bingbot",
+];
 await writeFile(path.join(outputRoot, "robots.txt"), [
+  ...welcomedCrawlers.flatMap((agent) => [`User-agent: ${agent}`, "Allow: /", ""]),
   "User-agent: *",
   "Allow: /",
   ...(siteUrl ? [`Sitemap: ${siteUrl}/sitemap.xml`] : []),
