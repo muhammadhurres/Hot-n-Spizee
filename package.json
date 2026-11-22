@@ -8,6 +8,8 @@
     "test": "node --test",
     "deploy": "wrangler deploy",
     "deploy:app": "wrangler deploy --config wrangler.app.jsonc",
+    "deploy:all": "npm run build && wrangler deploy && wrangler deploy --config wrangler.app.jsonc",
+    "keystore:setup": "powershell -ExecutionPolicy Bypass -File scripts/setup-keystore.ps1",
     "preview": "wrangler dev",
     "android:sync": "npm run build && cap sync android"
   },

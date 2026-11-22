@@ -128,7 +128,7 @@ function renderHome() {
         <p class="eyebrow">Fresh food · Great taste</p>
         <h1>Good food, <span>good value.</span></h1>
         <p class="lead">Explore the Hot n Spizee menu, choose what you love, and send your request straight to us on WhatsApp.</p>
-        <div class="hero-actions"><a class="button" href="#/menu" data-link>Explore the menu</a><a class="button button-secondary" href="#/reservation" data-link>Reserve a table</a></div>
+        <div class="hero-actions"><a class="button" href="#/menu" data-link>Explore the menu</a><a class="button button-secondary" href="#/reservation" data-link>Reserve a table</a><a class="button button-secondary" href="https://app.hotnspizee.com/" target="_blank" rel="noopener">Get Android App 📱</a></div>
       </div>
       <div class="hero-art"><img src="/assets/logo-hero.jpeg" alt="Hot n Spizee restaurant logo"></div>
     </section>
@@ -141,6 +141,22 @@ function renderHome() {
     ${categoryLinks()}
     <div class="section-heading"><h2>Popular picks</h2></div>
     <div class="menu-grid">${featured.map(dishCard).join("")}</div>
+    <section class="app-promo-card">
+      <div class="app-promo-content">
+        <p class="eyebrow">Official Mobile App</p>
+        <h2>Order faster with our Android App</h2>
+        <p>Keep the Hot n Spizee menu right at your fingertips with our fast Android app. Enjoy automatic menu updates, quick dish lookups, and direct WhatsApp ordering.</p>
+        <div class="hero-actions">
+          <a class="button" href="https://app.hotnspizee.com/" target="_blank" rel="noopener">Download for Android ↓</a>
+          <a class="text-link" href="https://app.hotnspizee.com/" target="_blank" rel="noopener">Installation steps & safety info →</a>
+        </div>
+      </div>
+      <div class="app-promo-badge">
+        <div class="app-icon-wrap">
+          <img src="/assets/logo-hero.jpeg" alt="Hot n Spizee Android App" width="96" height="101" loading="lazy">
+        </div>
+      </div>
+    </section>
     <section class="notice notice-spaced"><strong>Ordering note</strong><br>Your WhatsApp message is an order request. Our team confirms availability and the delivery fee with you before accepting it.</section>
     <section class="notice notice-spaced" aria-labelledby="faq-title">
       <h2 id="faq-title">Frequently asked questions</h2>
@@ -192,6 +208,12 @@ function renderMenu() {
   });
 }
 
+const googleIconSvg = `<svg class="google-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17Z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24Z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15Z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z"/></svg>`;
+
+function googlePrefButton(extraClass = "", text = "Follow on Google") {
+  return `<button type="button" class="${(`google-pref-btn ${extraClass}`).trim()}" onclick="triggerGooglePreferredSource()" aria-label="Follow Hot n Spizee on Google">${googleIconSvg}<span>${text}</span></button>`;
+}
+
 function renderDish(slug) {
   const item = menu.find((entry) => entry.slug === slug);
   if (!item) {
@@ -208,12 +230,29 @@ function renderDish(slug) {
       </div>
       <div class="detail-panel">
         <p class="eyebrow">Made fresh at Hot n Spizee</p><h1>${escapeHtml(item.name)}</h1>
+        <div class="dish-pref-top">${googlePrefButton("google-pref-btn--primary")}</div>
         <p class="lead">${escapeHtml(item.description)}</p>
         <p class="detail-price">${formatPrice(item.price)}</p>
         ${item.available ? `<form id="dish-form">
           <div class="field"><label for="dish-note">Note for this dish <span class="field-hint">Optional. Add preferences in your own words.</span></label><textarea id="dish-note" maxlength="500" placeholder="For example: less spicy, please"></textarea></div>
           <div class="form-actions"><label class="field"><span class="field-label">Quantity</span><input id="dish-quantity" type="number" min="1" step="1" value="1" required></label><button class="button" type="submit">Add to cart</button></div>
         </form>` : `<p class="unavailable">This dish is currently unavailable. Please check again later.</p>`}
+        <div class="dish-pref-callout">
+          <div>
+            <strong>Enjoyed this dish?</strong>
+            <p>Follow Hot n Spizee in Google Search for quick access to recipes, prices, and specials.</p>
+          </div>
+          ${googlePrefButton()}
+        </div>
+        <div class="author-bio-box">
+          <img class="author-bio-avatar" src="/assets/logo-hero.jpeg" alt="Hot n Spizee Culinary Team" width="44" height="46" loading="lazy">
+          <div class="author-bio-details">
+            <span class="author-bio-role">Prepared by</span>
+            <strong class="author-bio-name">Hot n Spizee Culinary Team</strong>
+            <p class="author-bio-desc">Authentic Pakistani BBQ, Karahi, and traditional delicacies in Chatta Bakhtawar, Islamabad.</p>
+          </div>
+          ${googlePrefButton("google-pref-btn--compact", "Follow")}
+        </div>
       </div>
     </section>
   </div>`;

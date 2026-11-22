@@ -1,6 +1,9 @@
 dist/
 dist-app/
 android/app/release.keystore
+*.keystore
+*.jks
+*secrets*.txt
 node_modules/
 .env
 .env.*

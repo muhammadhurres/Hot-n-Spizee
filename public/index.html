@@ -15,6 +15,36 @@
     <title>Pakistani Restaurant in Islamabad | Hot n Spizee</title>
     <link rel="icon" href="/assets/logo%20(2).jpeg" type="image/jpeg">
     <link rel="stylesheet" href="/css/styles.css?v=4">
+    <script async preferred-sources-control="manual" src="https://google.com"></script>
+    <script>
+      window.PREFERRED_SOURCE = window.PREFERRED_SOURCE || [];
+      window.PREFERRED_SOURCE.push((preferredSource) => {
+        preferredSource.init({ theme: 'light' });
+        window.googlePreferredSourceInstance = preferredSource;
+      });
+      window.triggerGooglePreferredSource = function() {
+        if (window.googlePreferredSourceInstance && typeof window.googlePreferredSourceInstance.addPreferredSource === 'function') {
+          window.googlePreferredSourceInstance.addPreferredSource();
+        } else if (window.preferredSource && typeof window.preferredSource.addPreferredSource === 'function') {
+          window.preferredSource.addPreferredSource();
+        } else {
+          window.open('https://google.com', '_blank', 'noopener,noreferrer');
+        }
+      };
+      window.dismissGooglePreferredSource = function() {
+        try { sessionStorage.setItem('hotnspizee_google_pref_dismissed', '1'); } catch (e) {}
+        const el = document.getElementById('google-pref-floating');
+        if (el) el.style.display = 'none';
+      };
+      document.addEventListener('DOMContentLoaded', function() {
+        try {
+          if (sessionStorage.getItem('hotnspizee_google_pref_dismissed') === '1') {
+            const el = document.getElementById('google-pref-floating');
+            if (el) el.style.display = 'none';
+          }
+        } catch (e) {}
+      });
+    </script>
     <script type="module" src="/js/main.js"></script>
   </head>
   <body>
@@ -86,6 +116,7 @@
       <nav class="main-nav" aria-label="Main navigation">
         <a href="/menu/" data-link>Menu</a>
         <a href="#/reservation" data-link aria-label="Reserve a table">Reserve</a>
+        <a href="https://app.hotnspizee.com/" class="nav-app-link" target="_blank" rel="noopener">App</a>
         <a class="cart-link" href="#/cart" data-link>Cart <span id="cart-count" class="cart-count">0</span></a>
       </nav>
     </header>
@@ -99,9 +130,28 @@
       </div>
       <div class="footer-meta">
         <p>Open daily · 1:00 PM–1:00 AM</p>
+        <a href="https://app.hotnspizee.com/" target="_blank" rel="noopener">Download Android App</a>
         <a href="#/admin" data-link>Admin</a>
       </div>
     </footer>
+    <aside id="google-pref-floating" class="google-pref-floating" aria-label="Follow on Google">
+      <div class="google-pref-floating__body">
+        <svg class="google-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17Z"/>
+          <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24Z"/>
+          <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15Z"/>
+          <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z"/>
+        </svg>
+        <div class="google-pref-floating__text">
+          <strong>Follow Hot n Spizee</strong>
+          <span>Preferred source on Google</span>
+        </div>
+      </div>
+      <div class="google-pref-floating__actions">
+        <button type="button" class="google-pref-btn google-pref-btn--compact" onclick="triggerGooglePreferredSource()" aria-label="Follow Hot n Spizee on Google">Follow</button>
+        <button type="button" class="google-pref-floating__close" onclick="dismissGooglePreferredSource()" aria-label="Dismiss banner">×</button>
+      </div>
+    </aside>
     <div id="status-message" class="status-message" role="status" aria-live="polite"></div>
   </body>
 </html>
