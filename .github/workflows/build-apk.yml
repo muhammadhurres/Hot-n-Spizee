@@ -6,7 +6,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: build-apk-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -43,9 +47,11 @@ jobs:
       - name: Copy APK with app name
         run: cp android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/hotnspizee.apk
 
-      - name: Upload debug APK
-        uses: actions/upload-artifact@v6
+      - name: Publish latest Android APK
+        if: github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@v2
         with:
-          name: hotnspizee-apk
-          path: android/app/build/outputs/apk/debug/hotnspizee.apk
-          if-no-files-found: error
+          tag_name: latest
+          name: Hot n Spizee Latest Android APK
+          files: android/app/build/outputs/apk/debug/hotnspizee.apk
+          overwrite_files: true
