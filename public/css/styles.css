@@ -262,30 +262,146 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(25px, 3.5v
 .footer-meta p { margin: 0; }
 .loading-message { padding: 50px 20px; color: var(--muted); text-align: center; }
 .brand-intro {
+  --brand-crimson: #E31C23;
+  --brand-jet: #000000;
+  --brand-white: #FFFFFF;
+  --brand-amber: #FFC107;
   position: fixed;
   z-index: 40;
   inset: 0;
   display: grid;
   place-items: center;
-  background: var(--surface);
+  min-height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  padding:
+    max(12px, env(safe-area-inset-top, 0px))
+    max(12px, env(safe-area-inset-right, 0px))
+    max(12px, env(safe-area-inset-bottom, 0px))
+    max(12px, env(safe-area-inset-left, 0px));
+  background: var(--brand-white);
   opacity: 1;
-  transition: opacity .42s ease, transform .42s ease;
+  transition: opacity .3s ease, transform .3s ease;
 }
-.brand-intro img {
+.brand-intro__mark {
   display: block;
-  width: clamp(170px, 44vw, 260px);
-  max-height: 50vh;
-  object-fit: contain;
-  animation: brand-intro-arrive .55s ease-out both;
+  width: clamp(230px, 72vmin, 520px);
+  max-width: calc(100vw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px) - 24px);
+  max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 24px);
+  overflow: visible;
 }
-.brand-intro.is-hidden { opacity: 0; transform: translateY(-5px); pointer-events: none; }
+.brand-intro__orbit {
+  fill: none;
+  stroke: var(--brand-crimson);
+  stroke-width: 2;
+  opacity: 0;
+  transform-box: view-box;
+  transform-origin: 374px 395px;
+  animation: brand-intro-orbit .7s ease-out both;
+}
+.brand-intro__orbit--outer { stroke-dasharray: 30 12 3 12; }
+.brand-intro__orbit--inner {
+  stroke: var(--brand-amber);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 16 28 16;
+  animation-direction: reverse;
+}
+.brand-intro__draw-ring {
+  fill: none;
+  stroke: var(--brand-crimson);
+  stroke-width: 2.5;
+  stroke-dasharray: 2200;
+  stroke-dashoffset: 2200;
+  opacity: .8;
+  animation: brand-intro-draw .55s ease-out 80ms both;
+}
+.brand-intro__piece {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: brand-intro-assemble .48s cubic-bezier(.2, .8, .2, 1) var(--piece-delay) both;
+}
+.brand-intro__piece--ring { --piece-delay: 250ms; --from-x: -28px; --from-y: 48px; --from-angle: -105deg; }
+.brand-intro__piece--hat { --piece-delay: 260ms; --from-x: -24px; --from-y: -105px; --from-angle: -24deg; }
+.brand-intro__piece--flame { --piece-delay: 280ms; --from-x: 120px; --from-y: -38px; --from-angle: 32deg; }
+.brand-intro__piece--chili { --piece-delay: 300ms; --from-x: 8px; --from-y: 110px; --from-angle: -38deg; }
+.brand-intro__piece--n { --piece-delay: 320ms; --from-x: -78px; --from-y: -25px; --from-angle: 24deg; }
+.brand-intro__piece--restaurant { --piece-delay: 390ms; --from-x: -52px; --from-y: 72px; --from-angle: -12deg; }
+.brand-intro__piece--hot-h { --piece-delay: 370ms; --from-x: -95px; --from-y: -10px; --from-angle: -14deg; }
+.brand-intro__piece--hot-o { --piece-delay: 390ms; --from-x: 0px; --from-y: -95px; --from-angle: 12deg; }
+.brand-intro__piece--hot-t { --piece-delay: 410ms; --from-x: 82px; --from-y: -34px; --from-angle: 18deg; }
+.brand-intro__piece--spizee-s { --piece-delay: 420ms; --from-x: -112px; --from-y: 28px; --from-angle: -18deg; }
+.brand-intro__piece--spizee-rest { --piece-delay: 440ms; --from-x: 112px; --from-y: 28px; --from-angle: -8deg; }
+.brand-intro__piece--tagline { --piece-delay: 620ms; --from-x: 0px; --from-y: 42px; --from-angle: 4deg; }
+.brand-intro__exact-mark {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: brand-intro-lock 1.15s ease-out both;
+}
+.brand-intro__lock-pulse {
+  fill: none;
+  stroke: var(--brand-amber);
+  stroke-width: 5;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: brand-intro-lock-pulse 260ms ease-out 930ms both;
+}
+.brand-intro__light-sweep {
+  opacity: 0;
+  transform: translate3d(-520px, 0, 0);
+  animation: brand-intro-sweep 1.2s ease-out both;
+}
+.brand-intro__ember {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: brand-intro-ember 820ms ease-out var(--ember-delay) both;
+}
+.brand-intro__ember--one { --ember-delay: 0ms; }
+.brand-intro__ember--two { --ember-delay: 90ms; }
+.brand-intro__ember--three { --ember-delay: 140ms; }
+.brand-intro__ember--four { --ember-delay: 40ms; }
+.brand-intro__ember--five { --ember-delay: 210ms; }
+.brand-intro__ember--six { --ember-delay: 120ms; }
+.brand-intro.is-exiting { opacity: 0; transform: scale(1.055); pointer-events: none; }
 @keyframes soft-arrive {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-@keyframes brand-intro-arrive {
-  from { opacity: 0; transform: scale(.94); }
-  to { opacity: 1; transform: scale(1); }
+@keyframes brand-intro-orbit {
+  from { opacity: 0; transform: rotate(-120deg) scale(.86); }
+  25%, 60% { opacity: .85; }
+  to { opacity: 0; transform: rotate(0) scale(1); }
+}
+@keyframes brand-intro-draw { to { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes brand-intro-assemble {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--from-x), var(--from-y), 0) rotate(var(--from-angle)) scale(.64);
+  }
+  75% { opacity: 1; transform: translate3d(0, 0, 0) rotate(0) scale(1.045); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) rotate(0) scale(1); }
+}
+@keyframes brand-intro-lock {
+  0%, 80% { opacity: 0; transform: scale(.975); }
+  91% { opacity: 1; transform: scale(1.018); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes brand-intro-lock-pulse {
+  from { opacity: .85; transform: scale(.96); }
+  to { opacity: 0; transform: scale(1.035); }
+}
+@keyframes brand-intro-sweep {
+  0%, 74% { opacity: 0; transform: translate3d(-520px, 0, 0); }
+  78% { opacity: .85; }
+  100% { opacity: 0; transform: translate3d(520px, 0, 0); }
+}
+@keyframes brand-intro-ember {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(.4); }
+  18% { opacity: .9; }
+  100% { opacity: 0; transform: translate3d(0, -170px, 0) scale(.1); }
 }
 
 @media (max-width: 850px) {

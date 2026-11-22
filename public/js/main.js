@@ -7,18 +7,24 @@ const app = document.querySelector("#main-content");
 const cartCount = document.querySelector("#cart-count");
 const statusMessage = document.querySelector("#status-message");
 const brandIntro = document.querySelector("#brand-intro");
+const brandIntroStartedAt = performance.now();
 const checkout = { name: "", phone: "", fulfillment: "delivery", address: "", addressConfirmed: false, locationAddress: "", locationAccuracy: null, payment: "Cash on delivery", locationUrl: "" };
 let menu = [];
 let cart = [];
 let searchValue = "";
 let toastTimer;
+let brandIntroDismissalScheduled = false;
 
 function dismissBrandIntro() {
-  if (!brandIntro) return;
+  if (!brandIntro || brandIntroDismissalScheduled) return;
+  brandIntroDismissalScheduled = true;
   brandIntro.setAttribute("aria-hidden", "true");
-  brandIntro.classList.add("is-hidden");
-  const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 480;
-  window.setTimeout(() => brandIntro.remove(), delay);
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const delay = reducedMotion ? 0 : Math.max(0, 1150 - (performance.now() - brandIntroStartedAt));
+  window.setTimeout(() => {
+    brandIntro.classList.add("is-exiting");
+    window.setTimeout(() => { brandIntro.style.display = "none"; }, reducedMotion ? 0 : 320);
+  }, delay);
 }
 
 function notify(message) {
