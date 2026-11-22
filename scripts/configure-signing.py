@@ -43,8 +43,14 @@ def main():
     github_output = os.environ.get("GITHUB_OUTPUT")
     github_env = os.environ.get("GITHUB_ENV")
 
-    if not (b64_raw and store_pass_raw and alias_raw and key_pass_raw):
-        print("Release signing secrets are missing or incomplete.")
+    missing = []
+    if not b64_raw: missing.append("ANDROID_KEYSTORE_BASE64")
+    if not store_pass_raw: missing.append("ANDROID_KEYSTORE_PASSWORD")
+    if not alias_raw: missing.append("ANDROID_KEY_ALIAS")
+    if not key_pass_raw: missing.append("ANDROID_KEY_PASSWORD")
+
+    if missing:
+        print(f"::warning::Release signing secrets missing in GitHub: {', '.join(missing)}")
         if github_output:
             with open(github_output, "a", encoding="utf-8") as f:
                 f.write("configured=false\n")
