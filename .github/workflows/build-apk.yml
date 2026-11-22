@@ -15,6 +15,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      APP_VERSION_CODE: ${{ github.run_number }}
+      APP_VERSION_NAME: 1.0.${{ github.run_number }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
@@ -34,30 +37,73 @@ jobs:
       - name: Install npm dependencies
         run: npm install
 
+      - name: Configure release signing
+        id: signing
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -z "$ANDROID_KEYSTORE_BASE64" ] || [ -z "$ANDROID_KEYSTORE_PASSWORD" ] || [ -z "$ANDROID_KEY_ALIAS" ] || [ -z "$ANDROID_KEY_PASSWORD" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Release signing is not configured; no downloadable APK update will be published."
+          else
+            printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release.keystore
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build and sync web assets
         run: npm run android:sync
 
       - name: Accept Android SDK licenses
         run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null 2>&1 || true
 
-      - name: Assemble debug APK
+      - name: Assemble debug APK for CI
+        if: github.event_name == 'pull_request' || steps.signing.outputs.configured != 'true'
         run: chmod +x gradlew && ./gradlew assembleDebug
         working-directory: android
 
+      - name: Assemble signed release APK
+        if: github.event_name != 'pull_request' && steps.signing.outputs.configured == 'true'
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/android/app/release.keystore
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: chmod +x gradlew && ./gradlew assembleRelease
+        working-directory: android
+
       - name: Copy APK with app name
-        run: cp android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/hotnspizee.apk
+        env:
+          RELEASE_SIGNING_CONFIGURED: ${{ steps.signing.outputs.configured }}
+        run: |
+          if [ "$RELEASE_SIGNING_CONFIGURED" = "true" ] && [ "$GITHUB_EVENT_NAME" != "pull_request" ]; then
+            cp android/app/build/outputs/apk/release/app-release.apk android/app/build/outputs/apk/release/hotnspizee.apk
+          else
+            cp android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/hotnspizee.apk
+          fi
 
       - name: Create APK checksum
-        if: github.event_name != 'pull_request'
-        run: cd android/app/build/outputs/apk/debug && sha256sum hotnspizee.apk > hotnspizee.apk.sha256
+        if: github.event_name != 'pull_request' && steps.signing.outputs.configured == 'true'
+        run: cd android/app/build/outputs/apk/release && sha256sum hotnspizee.apk > hotnspizee.apk.sha256
 
-      - name: Publish latest Android APK
-        if: github.event_name != 'pull_request'
+      - name: Create update metadata
+        if: github.event_name != 'pull_request' && steps.signing.outputs.configured == 'true'
+        run: |
+          APK_HASH="$(cut -d ' ' -f 1 android/app/build/outputs/apk/release/hotnspizee.apk.sha256)"
+          printf '{"packageName":"app.hotnspizee.com","versionCode":%s,"versionName":"%s","apkUrl":"https://github.com/muhammadhurres/Hot-n-Spizee/releases/latest/download/hotnspizee.apk","sha256":"%s"}\n' \
+            "$APP_VERSION_CODE" "$APP_VERSION_NAME" "$APK_HASH" \
+            > android/app/build/outputs/apk/release/update.json
+
+      - name: Publish latest signed Android APK
+        if: github.event_name != 'pull_request' && steps.signing.outputs.configured == 'true'
         uses: softprops/action-gh-release@v3.0.4
         with:
           tag_name: latest
           name: Hot n Spizee Latest Android APK
           files: |
-            android/app/build/outputs/apk/debug/hotnspizee.apk
-            android/app/build/outputs/apk/debug/hotnspizee.apk.sha256
+            android/app/build/outputs/apk/release/hotnspizee.apk
+            android/app/build/outputs/apk/release/hotnspizee.apk.sha256
+            android/app/build/outputs/apk/release/update.json
           overwrite_files: true

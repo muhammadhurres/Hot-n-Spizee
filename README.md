@@ -41,3 +41,18 @@ For the first Android setup, build the site and add the native platform:
 2. Run `npx cap add android`.
 
 After changing the website, run `npm run android:sync` to rebuild `dist/` and sync it into the Android project. Open the project in Android Studio with `npx cap open android`.
+
+### Quiet Android updates
+
+The Android app checks GitHub Releases on launch and periodically while connected. It downloads only a newer APK, verifies its SHA-256 and package/version metadata, then submits it to Android's `PackageInstaller` for a no-user-action self-update when the device allows it. Android may still require confirmation on some OS versions or devices.
+
+The first update may ask users to allow **Hot n Spizee** itself to install updates in Android settings. This is separate from allowing a browser or file manager to install the first APK. The app ID and release signing key must remain unchanged.
+
+Before publishing signed APKs, create a private release keystore in Android Studio (**Build > Generate Signed Bundle / APK > APK > Create new**) and back it up securely. Do not commit or send the keystore or passwords in chat. Add these repository secrets under **Settings > Secrets and variables > Actions**:
+
+- `ANDROID_KEYSTORE_BASE64`: Base64-encoded keystore file.
+- `ANDROID_KEYSTORE_PASSWORD`: keystore password.
+- `ANDROID_KEY_ALIAS`: key alias.
+- `ANDROID_KEY_PASSWORD`: key password.
+
+On Windows PowerShell, encode the keystore with `[Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\path\to\release-key.jks"))` and paste the output directly into the GitHub secret. The APK release workflow does not publish an update unless all four secrets are set. Version codes increase with each workflow run. Because no users have installed the app yet, configure the permanent key before distributing the first signed APK.

@@ -1,5 +1,6 @@
 dist/
 dist-app/
+android/app/release.keystore
 node_modules/
 .env
 .env.*
