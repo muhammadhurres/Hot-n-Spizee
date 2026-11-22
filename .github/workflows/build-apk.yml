@@ -49,7 +49,13 @@ jobs:
             echo "configured=false" >> "$GITHUB_OUTPUT"
             echo "::warning::Release signing is not configured; no downloadable APK update will be published."
           else
-            printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release.keystore
+            python3 -c "import os, base64; raw = os.environ['ANDROID_KEYSTORE_BASE64'].strip(); raw = raw.split(':', 1)[-1].strip(); open('android/app/release.keystore', 'wb').write(base64.b64decode(raw))"
+            CLEAN_ALIAS=$(python3 -c "import os; print(os.environ['ANDROID_KEY_ALIAS'].strip().split(':', 1)[-1].strip())")
+            CLEAN_STORE_PASS=$(python3 -c "import os; print(os.environ['ANDROID_KEYSTORE_PASSWORD'].strip().split(':', 1)[-1].strip())")
+            CLEAN_KEY_PASS=$(python3 -c "import os; print(os.environ['ANDROID_KEY_PASSWORD'].strip().split(':', 1)[-1].strip())")
+            echo "ANDROID_KEY_ALIAS=$CLEAN_ALIAS" >> "$GITHUB_ENV"
+            echo "ANDROID_KEYSTORE_PASSWORD=$CLEAN_STORE_PASS" >> "$GITHUB_ENV"
+            echo "ANDROID_KEY_PASSWORD=$CLEAN_KEY_PASS" >> "$GITHUB_ENV"
             echo "configured=true" >> "$GITHUB_OUTPUT"
           fi
 
@@ -68,9 +74,9 @@ jobs:
         if: github.event_name != 'pull_request' && steps.signing.outputs.configured == 'true'
         env:
           ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/android/app/release.keystore
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ env.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ env.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ env.ANDROID_KEY_PASSWORD }}
         run: chmod +x gradlew && ./gradlew assembleRelease
         working-directory: android
 
