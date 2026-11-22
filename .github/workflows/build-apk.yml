@@ -46,6 +46,6 @@ jobs:
       - name: Upload debug APK
         uses: actions/upload-artifact@v6
         with:
-          name: android-debug-apk
+          name: hotnspizee-apk
           path: android/app/build/outputs/apk/debug/hotnspizee.apk
           if-no-files-found: error
