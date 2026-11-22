@@ -377,6 +377,51 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(25px, 3.5v
   background: var(--surface-muted);
   color: var(--ink);
 }
+
+/* ── Post-order Google Preferred Source toast ── */
+#gps-toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--red);
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.13);
+  max-width: 480px;
+  width: calc(100% - 32px);
+  font-size: 13px;
+  color: var(--ink);
+  animation: gps-toast-in .3s ease;
+}
+@keyframes gps-toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+#gps-toast span { flex: 1 1 200px; line-height: 1.4; }
+.gps-toast-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--muted);
+  padding: 2px 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.gps-toast-close:hover { color: var(--ink); }
+
+/* ── App-promo GPS row ── */
+.app-promo-gps { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+.app-promo-gps-hint { margin: 0; font-size: 12px; color: var(--muted); line-height: 1.4; }
 .cart-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr); gap: 24px; align-items: start; }
 .cart-list, .checkout-panel, .form-panel { padding: clamp(18px, 3vw, 26px); }
 .cart-list h2, .checkout-panel h2, .form-panel h2 { margin-bottom: 17px; font-size: 27px; }

@@ -17,27 +17,81 @@
     <link rel="stylesheet" href="/css/styles.css?v=4">
     <script async preferred-sources-control="manual" src="https://news.google.com/swg/js/v1/publisher.js"></script>
     <script>
-      var _gpsInstance = null;
+      /* ── Google Preferred Sources – Hot n Spizee ── */
+      window.googlePreferredSourceInstance = null;
+
       (self.PREFERRED_SOURCE = self.PREFERRED_SOURCE || []).push(function(preferredSource) {
         preferredSource.init({ theme: 'light', lang: 'en' });
-        _gpsInstance = preferredSource;
+
+        /* expose instance globally so any script can reach it */
+        window.googlePreferredSourceInstance = preferredSource;
+
+        /* auto-bind every element carrying the trigger class (current + future renders) */
+        function bindTriggers() {
+          document.querySelectorAll('.trigger-google-preferred:not([data-gps-bound])').forEach(function(el) {
+            el.setAttribute('data-gps-bound', '1');
+            el.addEventListener('click', function(e) {
+              e.preventDefault();
+              preferredSource.addPreferredSource();
+              /* GA4 / GTM event tracking */
+              if (typeof window.gtag === 'function') {
+                window.gtag('event', 'preferred_source_click', {
+                  event_category: 'engagement',
+                  event_label: el.id || el.dataset.gpsLabel || 'custom_trigger'
+                });
+              }
+            });
+          });
+        }
+
+        /* bind immediately + re-bind after every SPA render (MutationObserver) */
+        bindTriggers();
+        new MutationObserver(bindTriggers).observe(document.body, { childList: true, subtree: true });
       });
-      window.triggerGooglePreferredSource = function() {
-        if (_gpsInstance && typeof _gpsInstance.addPreferredSource === 'function') {
-          _gpsInstance.addPreferredSource();
+
+      /* global helper called by onclick="triggerGooglePreferredSource()" buttons */
+      window.triggerGooglePreferredSource = function(label) {
+        var inst = window.googlePreferredSourceInstance;
+        if (inst && typeof inst.addPreferredSource === 'function') {
+          inst.addPreferredSource();
+          if (typeof window.gtag === 'function') {
+            window.gtag('event', 'preferred_source_click', {
+              event_category: 'engagement',
+              event_label: label || 'onclick_trigger'
+            });
+          }
         } else {
           window.open('https://www.google.com/preferences/source?q=hotnspizee.com', '_blank', 'noopener,noreferrer');
         }
       };
+
+      /* floating banner dismiss */
       window.dismissGooglePreferredSource = function() {
         try { sessionStorage.setItem('hotnspizee_google_pref_dismissed', '1'); } catch (e) {}
-        const el = document.getElementById('google-pref-floating');
+        var el = document.getElementById('google-pref-floating');
         if (el) el.style.display = 'none';
       };
+
+      /* post-WhatsApp toast: show "Pin us on Google" after order/reservation is sent */
+      window.showGooglePrefToast = function() {
+        if (document.getElementById('gps-toast')) return;
+        var t = document.createElement('div');
+        t.id = 'gps-toast';
+        t.setAttribute('role', 'status');
+        t.setAttribute('aria-live', 'polite');
+        t.innerHTML =
+          '<span>🎉 Order sent! Pin <strong>Hot n Spizee</strong> to your Google Search so you never miss our Islamabad deals.</span>' +
+          '<button type="button" class="button button-small trigger-google-preferred" id="gps-toast-btn" data-gps-label="post_order_toast">⭐ Follow on Google</button>' +
+          '<button type="button" class="gps-toast-close" aria-label="Close" onclick="this.parentElement.remove()">×</button>';
+        document.body.appendChild(t);
+        /* auto-dismiss after 18 s */
+        setTimeout(function() { if (t.parentElement) t.remove(); }, 18000);
+      };
+
       document.addEventListener('DOMContentLoaded', function() {
         try {
           if (sessionStorage.getItem('hotnspizee_google_pref_dismissed') === '1') {
-            const el = document.getElementById('google-pref-floating');
+            var el = document.getElementById('google-pref-floating');
             if (el) el.style.display = 'none';
           }
         } catch (e) {}

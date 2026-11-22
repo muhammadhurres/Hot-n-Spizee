@@ -148,7 +148,11 @@ function renderHome() {
         <p>Keep the Hot n Spizee menu right at your fingertips with our fast Android app. Enjoy automatic menu updates, quick dish lookups, and direct WhatsApp ordering.</p>
         <div class="hero-actions">
           <a class="button" href="https://app.hotnspizee.com/" target="_blank" rel="noopener">Download for Android ↓</a>
-          <a class="text-link" href="https://app.hotnspizee.com/" target="_blank" rel="noopener">Installation steps & safety info →</a>
+          <a class="text-link" href="https://app.hotnspizee.com/" target="_blank" rel="noopener">Installation steps &amp; safety info →</a>
+        </div>
+        <div class="app-promo-gps">
+          <button type="button" id="hns-preferred-btn" class="google-pref-btn trigger-google-preferred" data-gps-label="app_promo_section" aria-label="Follow Hot n Spizee on Google">${googleIconSvg}<span>⭐ Make Hot n Spizee Your Preferred Google Source</span></button>
+          <p class="app-promo-gps-hint">Pin us on Google Search — your content gets a <strong>Preferred</strong> badge in Top Stories &amp; AI Mode.</p>
         </div>
       </div>
       <div class="app-promo-badge">
@@ -373,6 +377,7 @@ function renderCart() {
       "Please confirm item availability and the final amount. I understand this request is not confirmed until the restaurant replies.",
     ].filter(Boolean).join("\n");
     openWhatsApp(message);
+    if (typeof window.showGooglePrefToast === 'function') window.showGooglePrefToast();
   });
 }
 
