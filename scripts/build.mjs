@@ -7,6 +7,7 @@ import { escapeHtml, formatPrice, loadMenu } from "../public/js/menu.js";
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourceRoot = path.join(projectRoot, "public");
 const outputRoot = path.join(projectRoot, "dist");
+const appDownloadOutputRoot = path.join(projectRoot, "dist-app");
 const configuredSiteUrl = process.env.SITE_URL;
 
 if (process.env.CF_PAGES && !configuredSiteUrl) {
@@ -137,6 +138,13 @@ const homeMain = `<div class="page-shell">
 
 await rm(outputRoot, { recursive: true, force: true });
 await cp(sourceRoot, outputRoot, { recursive: true });
+await rm(appDownloadOutputRoot, { recursive: true, force: true });
+await mkdir(path.join(appDownloadOutputRoot, "css"), { recursive: true });
+await mkdir(path.join(appDownloadOutputRoot, "assets"), { recursive: true });
+await cp(path.join(sourceRoot, "app-download", "index.html"), path.join(appDownloadOutputRoot, "index.html"));
+await cp(path.join(sourceRoot, "css", "styles.css"), path.join(appDownloadOutputRoot, "css", "styles.css"));
+await cp(path.join(sourceRoot, "css", "app-download.css"), path.join(appDownloadOutputRoot, "css", "app-download.css"));
+await cp(path.join(sourceRoot, "assets", "logo-hero.jpeg"), path.join(appDownloadOutputRoot, "assets", "logo-hero.jpeg"));
 const llmsMenu = menu.map((item) =>
   `- ${item.name} (${item.category}) - PKR ${item.price}${item.available ? "" : " (currently unavailable)"}`,
 ).join("\n");

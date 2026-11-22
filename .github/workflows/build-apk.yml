@@ -47,11 +47,17 @@ jobs:
       - name: Copy APK with app name
         run: cp android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/hotnspizee.apk
 
+      - name: Create APK checksum
+        if: github.event_name != 'pull_request'
+        run: cd android/app/build/outputs/apk/debug && sha256sum hotnspizee.apk > hotnspizee.apk.sha256
+
       - name: Publish latest Android APK
         if: github.event_name != 'pull_request'
         uses: softprops/action-gh-release@v3.0.4
         with:
           tag_name: latest
           name: Hot n Spizee Latest Android APK
-          files: android/app/build/outputs/apk/debug/hotnspizee.apk
+          files: |
+            android/app/build/outputs/apk/debug/hotnspizee.apk
+            android/app/build/outputs/apk/debug/hotnspizee.apk.sha256
           overwrite_files: true

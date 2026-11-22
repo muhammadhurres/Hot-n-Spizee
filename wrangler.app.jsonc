@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hot-n-spizee-app-download",
+  "compatibility_date": "2026-11-09",
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "app.hotnspizee.com",
+      "custom_domain": true
+    }
+  ],
+  "assets": {
+    "directory": "dist-app"
+  }
+}
