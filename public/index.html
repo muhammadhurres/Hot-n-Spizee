@@ -15,20 +15,18 @@
     <title>Pakistani Restaurant in Islamabad | Hot n Spizee</title>
     <link rel="icon" href="/assets/logo%20(2).jpeg" type="image/jpeg">
     <link rel="stylesheet" href="/css/styles.css?v=4">
-    <script async preferred-sources-control="manual" src="https://google.com"></script>
+    <script async preferred-sources-control="manual" src="https://news.google.com/swg/js/v1/publisher.js"></script>
     <script>
-      window.PREFERRED_SOURCE = window.PREFERRED_SOURCE || [];
-      window.PREFERRED_SOURCE.push((preferredSource) => {
-        preferredSource.init({ theme: 'light' });
-        window.googlePreferredSourceInstance = preferredSource;
+      var _gpsInstance = null;
+      (self.PREFERRED_SOURCE = self.PREFERRED_SOURCE || []).push(function(preferredSource) {
+        preferredSource.init({ theme: 'light', lang: 'en' });
+        _gpsInstance = preferredSource;
       });
       window.triggerGooglePreferredSource = function() {
-        if (window.googlePreferredSourceInstance && typeof window.googlePreferredSourceInstance.addPreferredSource === 'function') {
-          window.googlePreferredSourceInstance.addPreferredSource();
-        } else if (window.preferredSource && typeof window.preferredSource.addPreferredSource === 'function') {
-          window.preferredSource.addPreferredSource();
+        if (_gpsInstance && typeof _gpsInstance.addPreferredSource === 'function') {
+          _gpsInstance.addPreferredSource();
         } else {
-          window.open('https://google.com', '_blank', 'noopener,noreferrer');
+          window.open('https://www.google.com/preferences/source?q=hotnspizee.com', '_blank', 'noopener,noreferrer');
         }
       };
       window.dismissGooglePreferredSource = function() {
