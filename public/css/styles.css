@@ -11,8 +11,8 @@
   --gold: #d7a928;
   --green: #2f6d4e;
   --shadow: 0 16px 42px rgb(34 31 25 / 8%);
-  --glass: rgb(255 255 255 / 76%);
-  --glass-border: rgb(255 255 255 / 88%);
+  --glass: #fff;
+  --glass-border: #e7e4dc;
   font-family: Inter, "Segoe UI", Arial, sans-serif;
   color: var(--ink);
   background: var(--paper);
@@ -60,11 +60,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   gap: 20px;
   min-height: 82px;
   padding: 8px clamp(16px, 5vw, 72px);
-  border-bottom: 1px solid rgb(255 255 255 / 72%);
-  background: rgb(255 255 255 / 72%);
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
   box-shadow: 0 8px 28px rgb(34 31 25 / 6%);
-  -webkit-backdrop-filter: blur(22px) saturate(155%);
-  backdrop-filter: blur(22px) saturate(155%);
 }
 .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
 .brand img { width: 58px; height: 58px; object-fit: contain; }
@@ -108,8 +106,6 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(25px, 3.5v
   border-radius: 26px;
   background: linear-gradient(118deg, rgb(255 255 255 / 88%), rgb(255 255 255 / 72%) 67%, rgb(245 238 226 / 76%));
   box-shadow: var(--shadow);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
-  backdrop-filter: blur(24px) saturate(140%);
 }
 .hero h1 span { color: var(--red); }
 .hero-art { display: grid; place-items: center; min-height: 230px; }
@@ -154,8 +150,6 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(25px, 3.5v
   font-weight: 700;
   text-decoration: none;
   box-shadow: 0 3px 12px rgb(34 31 25 / 4%);
-  -webkit-backdrop-filter: blur(16px) saturate(145%);
-  backdrop-filter: blur(16px) saturate(145%);
   transition: transform .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
 .category-chip:hover { transform: translateY(-2px); }
@@ -184,8 +178,6 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(25px, 3.5v
   border-radius: 19px;
   background: var(--glass);
   box-shadow: 0 8px 24px rgb(34 31 25 / 5%), inset 0 1px 0 rgb(255 255 255 / 85%);
-  -webkit-backdrop-filter: blur(18px) saturate(135%);
-  backdrop-filter: blur(18px) saturate(135%);
   animation: soft-arrive .42s ease-out both;
   transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
@@ -221,8 +213,6 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(25px, 3.5v
   color: var(--muted);
   line-height: 1.6;
   box-shadow: 0 8px 24px rgb(34 31 25 / 5%), inset 0 1px 0 rgb(255 255 255 / 85%);
-  -webkit-backdrop-filter: blur(18px) saturate(135%);
-  backdrop-filter: blur(18px) saturate(135%);
 }
 .notice-spaced { margin-top: 32px; }
 .location-button { margin-top: 9px; }
@@ -261,7 +251,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(25px, 3.5v
 .field .address-confirmation { display: flex; align-items: flex-start; gap: 8px; margin: 12px 0 0; color: var(--ink); font-size: 12px; font-weight: 600; line-height: 1.5; }
 .address-confirmation input { flex: 0 0 auto; width: auto; min-height: 0; margin: 3px 0 0; padding: 0; }
 .reservation-layout { display: grid; grid-template-columns: minmax(0, .8fr) minmax(320px, 1.2fr); gap: 36px; align-items: start; }
-.reservation-aside { padding: 26px; border: 1px solid var(--glass-border); border-radius: 18px; background: var(--glass); box-shadow: 0 8px 24px rgb(34 31 25 / 5%); -webkit-backdrop-filter: blur(18px) saturate(135%); backdrop-filter: blur(18px) saturate(135%); }
+.reservation-aside { padding: 26px; border: 1px solid var(--glass-border); border-radius: 18px; background: var(--glass); box-shadow: 0 8px 24px rgb(34 31 25 / 5%); }
 .reservation-aside h2 { font-size: 28px; }
 .status-message { position: fixed; z-index: 30; right: 18px; bottom: 18px; max-width: min(440px, calc(100% - 36px)); padding: 12px 16px; border: 1px solid #d8d1c2; border-radius: 12px; background: #fff; box-shadow: var(--shadow); color: var(--ink); opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity .18s ease, transform .18s ease; }
 .status-message.is-visible { opacity: 1; transform: translateY(0); }
@@ -271,9 +261,31 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(25px, 3.5v
 .footer-meta { display: grid; justify-items: end; align-content: center; }
 .footer-meta p { margin: 0; }
 .loading-message { padding: 50px 20px; color: var(--muted); text-align: center; }
+.brand-intro {
+  position: fixed;
+  z-index: 40;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--surface);
+  opacity: 1;
+  transition: opacity .42s ease, transform .42s ease;
+}
+.brand-intro img {
+  display: block;
+  width: clamp(170px, 44vw, 260px);
+  max-height: 50vh;
+  object-fit: contain;
+  animation: brand-intro-arrive .55s ease-out both;
+}
+.brand-intro.is-hidden { opacity: 0; transform: translateY(-5px); pointer-events: none; }
 @keyframes soft-arrive {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+@keyframes brand-intro-arrive {
+  from { opacity: 0; transform: scale(.94); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @media (max-width: 850px) {

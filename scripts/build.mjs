@@ -35,7 +35,7 @@ const jsonLd = (value) => JSON.stringify(value).replace(/</g, "\\u003c");
 function card(item) {
   return `<article class="dish-card">
     <a class="dish-image-wrap${item.imageUrl ? "" : " is-fallback"}" href="/menu/${encodeURIComponent(item.slug)}/" aria-label="View ${escapeAttribute(item.name)}">
-      ${item.imageUrl ? `<img class="dish-image" src="${escapeAttribute(item.imageUrl)}" alt="${escapeAttribute(item.name)}" loading="lazy">` : `<div class="dish-image-fallback is-only-fallback">${escapeAttribute(item.category)}</div>`}
+      ${item.imageUrl ? `<img class="dish-image" src="${escapeAttribute(item.imageUrl)}" alt="${escapeAttribute(item.name)}" loading="lazy" decoding="async">` : `<div class="dish-image-fallback is-only-fallback">${escapeAttribute(item.category)}</div>`}
     </a>
     <div class="dish-content"><p class="dish-category">${escapeAttribute(item.category)}</p>
       <h2 class="dish-title"><a href="/menu/${encodeURIComponent(item.slug)}/">${escapeAttribute(item.name)}</a></h2>
@@ -219,7 +219,7 @@ for (const item of menu) {
     <p class="eyebrow"><a class="text-link" href="/menu/">${escapeAttribute(item.category)} · Hot n Spizee menu</a></p>
     <section class="detail-layout">
       <div class="dish-image-wrap${item.imageUrl ? "" : " is-fallback"}">
-        ${item.imageUrl ? `<img class="detail-image" src="${escapeAttribute(item.imageUrl)}" alt="${escapeAttribute(item.name)}">` : `<div class="dish-image-fallback is-only-fallback">${escapeAttribute(item.category)}</div>`}
+        ${item.imageUrl ? `<img class="detail-image" src="${escapeAttribute(item.imageUrl)}" alt="${escapeAttribute(item.name)}" loading="lazy" decoding="async">` : `<div class="dish-image-fallback is-only-fallback">${escapeAttribute(item.category)}</div>`}
       </div>
       <div class="detail-panel"><p class="eyebrow">Made fresh at Hot n Spizee</p><h1>${escapeAttribute(item.name)}</h1>
         <p class="lead">${escapeAttribute(item.description)}</p><p class="detail-price">${formatPrice(item.price)}</p>

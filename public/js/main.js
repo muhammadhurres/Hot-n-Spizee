@@ -6,11 +6,20 @@ import { openWhatsApp } from "./whatsapp.js";
 const app = document.querySelector("#main-content");
 const cartCount = document.querySelector("#cart-count");
 const statusMessage = document.querySelector("#status-message");
+const brandIntro = document.querySelector("#brand-intro");
 const checkout = { name: "", phone: "", fulfillment: "delivery", address: "", addressConfirmed: false, locationAddress: "", locationAccuracy: null, payment: "Cash on delivery", locationUrl: "" };
 let menu = [];
 let cart = [];
 let searchValue = "";
 let toastTimer;
+
+function dismissBrandIntro() {
+  if (!brandIntro) return;
+  brandIntro.setAttribute("aria-hidden", "true");
+  brandIntro.classList.add("is-hidden");
+  const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 480;
+  window.setTimeout(() => brandIntro.remove(), delay);
+}
 
 function notify(message) {
   statusMessage.textContent = message;
@@ -43,7 +52,7 @@ function addToCart(item, quantity = 1, note = "") {
 
 function dishCard(item) {
   const image = item.imageUrl
-    ? `<img class="dish-image" data-food-image src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}" loading="lazy" referrerpolicy="no-referrer"><div class="dish-image-fallback" aria-hidden="true">${escapeHtml(item.category)}</div>`
+    ? `<img class="dish-image" data-food-image src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}" loading="lazy" decoding="async" referrerpolicy="no-referrer"><div class="dish-image-fallback" aria-hidden="true">${escapeHtml(item.category)}</div>`
     : `<div class="dish-image-fallback is-only-fallback">${escapeHtml(item.category)}</div>`;
   return `<article class="dish-card">
     <a class="dish-image-wrap${item.imageUrl ? "" : " is-fallback"}" href="${pathFor(item.slug)}" data-link aria-label="View ${escapeHtml(item.name)}">
@@ -188,7 +197,7 @@ function renderDish(slug) {
     <p class="eyebrow"><a class="text-link" href="#/menu?category=${encodeURIComponent(item.category)}" data-link>${escapeHtml(item.category)}</a></p>
     <section class="detail-layout">
       <div class="dish-image-wrap${item.imageUrl ? "" : " is-fallback"}">
-        ${item.imageUrl ? `<img class="detail-image" data-food-image src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}" referrerpolicy="no-referrer">` : ""}
+        ${item.imageUrl ? `<img class="detail-image" data-food-image src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : ""}
         <div class="dish-image-fallback" aria-hidden="true">${escapeHtml(item.category)}</div>
       </div>
       <div class="detail-panel">
@@ -520,9 +529,11 @@ try {
   }
   saveCart(cart);
   render();
+  dismissBrandIntro();
 } catch (error) {
   console.error("The menu failed to load.", error);
   if (app.dataset.prerendered !== "true") {
     app.innerHTML = `<div class="page-shell"><section class="empty-state"><h1>Menu unavailable</h1><p>We couldn't load the menu just now. Please try again later.</p></section></div>`;
   }
+  dismissBrandIntro();
 }

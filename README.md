@@ -10,7 +10,7 @@ The app uses hash-based page links (for example `#/cart`) so navigation also wor
 
 Run the menu/data checks with `npm test`. No extra packages are required.
 
-The interface uses lightweight glass-inspired surfaces and short entrance/press animations. System reduced-motion preferences disable animations.
+The interface uses lightweight solid surfaces and short entrance/press animations. System reduced-motion preferences disable animations.
 
 ## Cloudflare Pages
 
